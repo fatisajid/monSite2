@@ -4,44 +4,33 @@ namespace App\Controllers;
 
 use App\Utils\AbstractController;
 use App\Models\User;
-use Config\Router;
-use Config\Database;
 
 class RegisterController extends AbstractController
 {
-    public function register()
+    public function index()
     {
-        // Vérifie si la requête est de type POST (formulaire soumis)
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Récupérer les données envoyées par le formulaire
-            $username = htmlspecialchars($_POST['username']);
-            $email = htmlspecialchars($_POST['email']);  // Ajout de la récupération de l'email
-            $password = password_hash($_POST['password'], PASSWORD_BCRYPT);  // Hachage du mot de passe
-            $role = 'user';  // Définir un rôle par défaut (tu peux changer si tu as une gestion de rôles plus avancée)
 
-            // Créer une instance du modèle User
-            $userModel = new User();
+        if (isset($_POST['username'], $_POST['email'], $_POST['password'])) {
+            $this->check("username", $_POST['username']);
+            $this->check("email", $_POST['email']);
+            $this->check("password", $_POST['password']);
 
-            // Créer un tableau de données à envoyer à la méthode createUser
-            $data = [
-                'username' => $username,
-                'email' => $email,
-                'password' => $password,
-                'role' => $role
-            ];
 
-            // Appeler la méthode createUser avec les données
-            if ($userModel->createUser($data)) {
-                // Si l'utilisateur a bien été créé, rediriger vers la page de connexion
-                header('Location: /login');
-                exit();  // N'oublie pas de quitter le script après la redirection
-            } else {
-                // Si une erreur survient lors de l'ajout de l'utilisateur
-                echo "Erreur lors de l'inscription. Veuillez réessayer.";
+            // var_dump($_POST['email']);
+            if (empty($this->arrayError)) {
+                $username =   htmlspecialchars($_POST['username']);
+                $email =   htmlspecialchars($_POST['email']);
+                $password =   htmlspecialchars($_POST['password']);
+
+                // $registerDate = date('Y-m-d');
+                $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+                $role = 'customer';
+                $createdAt = Date('Y-m-d');
+                $user = new User(null, $username, $email, $passwordHash, $role, $createdAt);
+                $user->save();
+                $this->redirectToRoute('/login');
             }
         }
-
-        // Affichage de la vue d'inscription (si la méthode n'est pas POST)
-        include __DIR__ . '/../Views/security/register.view.php';
+        require_once(__DIR__ . "/../Views/security/register.view.php");
     }
 }

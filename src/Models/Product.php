@@ -5,20 +5,20 @@ namespace App\Models;
 use Config\DataBase;
 use PDO;
 
-var_dump($resultFetch);
+
 class Product
 {
 
     protected ?int $id;
-    protected ?string $category_id;
+    protected ?int $category_id;
     protected ?string $name;
-    protected ?float $description;
-    protected ?int $price;
+    protected ?string $description;
+    protected ?float $price;
     protected ?string $created_at;
-    protected ?int $updated_at;
+    protected ?string $updated_at;
+    protected ?string $image;
 
-
-    public function __construct(?int $id, ?int $category_id, ?string $name,  ?string $description,  ?float $price, ?string $created_at, string|null $updated_at)
+    public function __construct(?int $id, ?int $category_id, ?string $name,  ?string $description,  ?float $price, ?string $created_at, string|null $updated_at, ?string $image)
     {
         $this->id = $id;
         $this->category_id = $category_id;
@@ -27,6 +27,7 @@ class Product
         $this->price = $price;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
+        $this->image = $image;
     }
     public function getAllProducts()
     {
@@ -38,12 +39,17 @@ class Product
         $products = [];
         if ($resultFetch) {
             foreach ($resultFetch as $row) {
-                $product = new Product($row['id'], $row['category_id'], $row['name'], $row['description'], $row['price'], null, null);
+                $product = new Product($row['id'], $row['category_id'], $row['name'], $row['description'], $row['price'], null, null, $row['image']);
                 $products[] = $product;
-                var_dump($resultFetch);
             }
             return $products;
+        
         }
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
 
@@ -52,33 +58,62 @@ class Product
         return $this->name;
     }
 
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
 
-    // public function createProduct($data)
-    // {
-    //     $stmt = $this->conn->prepare("INSERT INTO products (id, category_id, name, description, price) VALUES 
-    //     (:id, :category_id, :name, :description, :price)");
-    //     return $stmt->execute($data);
-    // }
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
 
-    // public function getProductById($id)
-    // {
-    //     $stmt = $this->conn->prepare("SELECT * FROM products WHERE id = :id");
-    //     $stmt->execute(['id' => $id]);
-    //     return $stmt->fetch(PDO::FETCH_ASSOC);
-    // }
 
-    // public function updateProduct($id, $data)
-    // {
-    //     $stmt = $this->conn->prepare("UPDATE products SET category_id = :category_id, name = :name, description = :description, price = :price WHERE id = :id");
-    //     $data['id'] = $id;
-    //     return $stmt->execute($data);
-    // }
+    public function create()
+    {
+        $pdo = DataBase::getConnection();
+        $sql = "INSERT INTO `products` (id, category_id, name, description, price, created_at, updated_at, image) VALUES (?,?,?,?,?,?,?,?)";
+        $statement = $pdo->prepare($sql);
+        return $statement->execute([$this->id, $this->category_id, $this->name, $this->description, $this->price, $this->created_at, $this->updated_at, $this->image]);
+    }
 
-    // public function deleteProduct($id)
-    // {
-    //     $stmt = $this->conn->prepare("DELETE FROM products WHERE id = :id");
-    //     return $stmt->execute(['id' => $id]);
-    // }
+    public function getProductById()
+    {
+        $pdo = DataBase::getConnection();
+        $sql = "SELECT * FROM `products` WHERE id = ?";
+        $statement = $pdo->prepare($sql);
+        $statement->execute([$this->id]);
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            return new Product($row['id'], $row['category_id'], $row['name'], $row['description'], $row['price'], $row['created_at'], $row['updated_at'], $row['image']);
+        } else {
+            return null;
+        }
+    }
+
+
+    public function updateProduct()
+    {
+
+        $pdo = DataBase::getConnection();
+        $sql = "UPDATE `products` 
+        SET `name` = ?, `description` = ?, `price` = ?,`updated_at` = ?, `image` = ?
+        WHERE `id` = ?";
+        $statement = $pdo->prepare($sql);
+        return $statement->execute([$this->name, $this->description, $this->price, $this->updated_at, $this->image, $this->id]);
+    }
+
+    public function deleteProduct()
+    {
+        $pdo = DataBase::getConnection();
+        $sql = 'DELETE FROM `products` WHERE `id` = ?';
+        $statement = $pdo->prepare($sql);
+        return $statement->execute([$this->id]);
+    }
 
     // requette pour recupere les produits
 

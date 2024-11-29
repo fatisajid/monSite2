@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Product;
 use App\Utils\AbstractController;
+use App\Models\User;
 
 use Config\Database;
 
@@ -12,7 +13,7 @@ class ProductController extends AbstractController
     public function index()
     {
 
-        $product = new Product(null, null, null, null, null, null, null);
+        $product = new Product(null, null, null, null, null, null, null, null);
         $products = $product->getAllProducts();
 
         // Inclusion manuelle de la vue avec les produits
@@ -20,132 +21,127 @@ class ProductController extends AbstractController
     }
 
 
-    //     public function show($id)
-    //     {
-    //         // Récupérer la connexion à la base de données
-    //         $db = DataBase::getConnection();
+    public function show()
+    {
 
-    //         // Récupération d'un produit spécifique par ID
-    //         $productModel = new Product($db);
-    //         $product = $productModel->getProductById($id);
-
-    //         // Si le produit n'existe pas, rediriger vers la liste des produits
-    //         if (!$product) {
-    //             $this->redirectToRoute('/products');
-    //         }
+        // Récupération d'un produit spécifique par ID
+        $productModel = new Product(null, null, null, null, null, null, null, null);
+        $product = $productModel->getAllProducts();
 
 
-    //         // Inclusion manuelle de la vue avec les produits
-    //         include __DIR__ . '/../views/products/product.view.php'; // Inclure la vue
-    //     }
+        // Inclusion manuelle de la vue avec les produits
+        include __DIR__ . '/../views/products/product.view.php'; // Inclure la vue
+    }
 
-    //     public function create()
-    //     {
-    //         // Récupérer la connexion à la base de données
-    //         $db = DataBase::getConnection();
-
-    //         // Vérification si l'utilisateur est connecté et autorisé à créer un produit (exemple : admin)
-    //         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != 'admin') {
-    //             $this->redirectToRoute('/');
-    //         }
-
-    //         // Traitement du formulaire de création de produit
-    //         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //             // Validation des champs
-    //             $this->check('name', $_POST['name']);
-    //             $this->check('description', $_POST['description']);
-    //             $this->check('price', $_POST['price']);
-
-    //             // Si aucune erreur n'est trouvée
-    //             if (empty($this->arrayError)) {
-    //                 $data = [
-    //                     'name' => htmlspecialchars($_POST['name']),
-    //                     'description' => htmlspecialchars($_POST['description']),
-    //                     'price' => $_POST['price']
-    //                 ];
-
-    //                 $productModel = new Product($db);
-    //                 if ($productModel->createProduct($data)) {
-    //                     // Redirection vers la liste des produits après création
-    //                     $this->redirectToRoute('/products');
-    //                 } else {
-    //                     $error = "Erreur lors de la création du produit.";
-    //                 }
-    //             }
-    //         }
+    public function create()
+    {
 
 
-    //         // Inclusion manuelle de la vue avec les produits
-    //         include __DIR__ . '/../views/products/create.view.php'; // Inclure la vue
-    //     }
+        // Vérification si l'utilisateur est connecté et autorisé à créer un produit (exemple : admin)
+        if (isset($_SESSION['user']) && $_SESSION['user']['role'] == 'admin') {
+            if (isset($_POST['name'])) {
+                $this->check('name', $_POST['name']);
+                // $this->check('created_at', $_POST['created_at']);
+                $this->check('description', $_POST['description']);
+                $this->check('price', $_POST['price']);
+                $target_dir = "public/img/";
+                $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 
-    //     public function edit($id)
-    //     {
-    //         // Vérification si l'utilisateur est connecté et autorisé à modifier un produit (exemple : admin)
-    //         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != 'admin') {
-    //             $this->redirectToRoute('/');
-    //         }
 
-    //         // Récupération du produit à modifier
 
-    //         // Récupérer la connexion à la base de données
-    //         $db = DataBase::getConnection();
+                if (empty($this->arrayError)) {
+                    $name = htmlspecialchars($_POST['name']);
+                    $created_at = date('Y-m-d H:i:s');
+                    $description = htmlspecialchars($_POST['description']);
+                    $price = htmlspecialchars($_POST['price']);
+                    // $id_user = $_SESSION['user']['idUser'];
+                    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                        $img = htmlspecialchars(basename($_FILES["fileToUpload"]["name"]));
+                        $img_path =  $img;
+                    }
+                    $product = new Product(null, null, $name, $description, $price, $created_at, null, $img_path);
 
-    //         $productModel = new Product($db);
-    //         $product = $productModel->getProductById($id);
+                    $product->create();
+                    // $this->redirectToRoute('/');
+                }
+            }
+            require_once(__DIR__ . '/../Views/products/create.view.php');
+        } else {
+            require_once(__DIR__ . '/../Views/error/404.php');
+        }
+    }
 
-    //         // Si le produit n'existe pas, rediriger vers la liste des produits
-    //         if (!$product) {
-    //             $this->redirectToRoute('/products');
-    //         }
+    public function edit()
+    {
+        if ($_SESSION['user']['role'] == 'admin') {
 
-    //         // Traitement du formulaire de modification du produit
-    //         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //             // Validation des champs
-    //             $this->check('name', $_POST['name']);
-    //             $this->check('description', $_POST['description']);
-    //             $this->check('price', $_POST['price']);
 
-    //             // Si aucune erreur n'est trouvée
-    //             if (empty($this->arrayError)) {
-    //                 $data = [
-    //                     'name' => htmlspecialchars($_POST['name']),
-    //                     'description' => htmlspecialchars($_POST['description']),
-    //                     'price' => $_POST['price']
-    //                 ];
+            if (isset($_GET['id'])) {
+                $idProduct = htmlspecialchars($_GET['id']);
+                $productModel = new Product($idProduct, null, null, null, null, null, null, null);
+                $products = $productModel->getProductById();
+            }
 
-    //                 if ($productModel->updateProduct($id, $data)) {
-    //                     // Redirection vers la liste des produits après mise à jour
-    //                     $this->redirectToRoute('/products');
-    //                 } else {
-    //                     $error = "Erreur lors de la mise à jour du produit.";
-    //                 }
-    //             }
-    //         }
 
-    //         // Rendu de la vue de modification de produit
-    //         // $this->render('products/edit.view.php', ['product' => $product]);
-    //         // Inclusion manuelle de la vue avec les produits
-    //         include __DIR__ . '/../Views/products/edit.view.php'; // Inclure la vue
-    //     }
+            if (!$products) {
+                $this->redirectToRoute('/products');
+            }
 
-    //     public function delete($id)
-    //     {
-    //         // Vérification si l'utilisateur est connecté et autorisé à supprimer un produit (exemple : admin)
-    //         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != 'admin') {
-    //             $this->redirectToRoute('/');
-    //         }
+            if (isset($_POST['name'], $_POST['description'], $_POST['price'])) {
+                var_dump($products);
 
-    //         // Suppression du produit
-    //         // Récupérer la connexion à la base de données
-    //         $db = DataBase::getConnection();
+                $this->check('name', $_POST['name']);
+                $this->check('description', $_POST['description']);
+                $this->check('price', $_POST['price']);
+                $target_dir = "public/img/";
+                $target_file = $target_dir . basename($_FILES["image"]["name"]);
+                var_dump($_FILES['image']);
 
-    //         $productModel = new Product($db);
-    //         if ($productModel->deleteProduct($id)) {
-    //             // Redirection vers la liste des produits après suppression
-    //             $this->redirectToRoute('/products');
-    //         } else {
-    //             $error = "Erreur lors de la suppression du produit.";
-    //         }
-    //     }
+
+
+                if (empty($this->arrayError)) {
+                    $name = htmlspecialchars($_POST['name']);
+                    $image = htmlspecialchars($_FILES['image']['name']);
+                    $description = htmlspecialchars($_POST['description']);
+                    $price = htmlspecialchars($_POST['price']);
+                    $updatedAt = date('Y-m-d H:i:s');
+                    if ($products->getImage()) {
+                        $img_path = $products->getImage();
+                    } else {
+                        if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                            $img = htmlspecialchars(basename($_FILES["image"]["name"]));
+                            $img_path =  $img;
+                        }
+                    }
+
+
+
+                    $product = new Product($idProduct, null, $name, $description, $price, null, $updatedAt, $img_path);
+
+                    $product->updateProduct();
+
+                    $this->redirectToRoute('/');
+                }
+            }
+            require_once(__DIR__ . '/../Views/products/edit.view.php');
+        } else {
+            $this->redirectToRoute('/');
+        }
+    }
+
+    public function delete()
+    {
+        if (isset($_POST['id'])) {
+            $idProduct = htmlspecialchars($_POST['id']);
+            $product = new Product($idProduct, null, null, null, null, null, null, null);
+
+            $myProduct = $product->getProductById();
+            $image = $myProduct->getImage();
+            unlink("public/img/" . $image);
+            $product->deleteProduct();
+            var_dump($image);
+
+            $this->redirectToRoute('/');
+        }
+    }
 }

@@ -1,39 +1,5 @@
 <?php
 
-// namespace Config;
-
-// use App\Controllers\ErrorController;
-
-// class Router
-// {
-//     public static function route($uri)
-//     {
-//         switch ($uri) {
-//             case '/':
-//                 $controller = new \Controllers\HomeController();
-//                 $controller->index();
-//                 break;
-//             case '/login':
-//                 $controller = new \Controllers\LoginController();
-//                 $controller->login();
-//                 break;
-//             case '/register':
-//                 $controller = new \Controllers\RegisterController();
-//                 $controller->register();
-//                 break;
-//             case '/products':
-//                 $controller = new \Controllers\ProductController();
-//                 $controller->list();
-//                 break;
-//             default:
-//                 $controller = new \Controllers\ErrorController();
-//                 $controller->notFound();
-//         }
-//     }
-// }
-
-
-
 namespace Config;
 
 use App\Controllers\ErrorController;

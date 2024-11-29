@@ -2,26 +2,62 @@
 
 namespace App\Models;
 
+use Config\DataBase;
 use PDO;
 
-class Category
+class Categorie
 {
-    private $db;
+    protected ?int $id;
+    protected ?string $name;
+    protected ?string $image;
+    protected ?string $description;
+    protected ?string $created_at;
 
-    public function __construct($db)
+
+    public function __construct(?int $id, ?string $name, ?string $image, ?string $description, ?string $created_at)
     {
-        $this->db = $db;
+        $this->id = $id;
+        $this->name = $name;
+        $this->image = $image;
+        $this->description = $description;
+        $this->created_at = $created_at;
     }
 
-    public function createCategory($data)
-    {
-        $stmt = $this->db->prepare("INSERT INTO categories (name, description) VALUES (:name, :description)");
-        return $stmt->execute($data);
-    }
+
 
     public function getAllCategories()
     {
-        $stmt = $this->db->query("SELECT * FROM categories");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $pdo = DataBase::getConnection();
+        $sql = "SELECT * FROM categories";
+        $statement = $pdo->prepare($sql);
+        $statement->execute();
+        $resultFetch = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $categories = [];
+        if ($resultFetch) {
+            foreach ($resultFetch as $row) {
+                $categorie = new Categorie($row['id'], $row['name'], $row['image'], $row['description'], null);
+                $categories[] = $categorie;
+            }
+            return $categories;
+        }
+    }
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
     }
 }

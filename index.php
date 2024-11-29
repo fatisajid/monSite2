@@ -1,22 +1,5 @@
 <?php
 
-
-
-// require_once 'Config/Database.php';
-// require_once 'Config/Router.php';
-// require_once 'src/Controllers/HomeController.php';
-// require_once 'src/Controllers/LoginController.php';
-// require_once 'src/Controllers/RegisterController.php';
-// require_once 'src/Controllers/ProductController.php';
-
-// session_start();
-// $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-// \Config\Router::route($uri);
-
-
-
-
-
 require "vendor/autoload.php"; // Charge automatiquement toutes les dépendances de Composer
 session_start();
 
@@ -42,15 +25,16 @@ $routes = new Router();
 $routes->addRoute('/', 'HomeController', 'index');
 
 // Routes pour la connexion/déconnexion et l'inscription
-$routes->addRoute('/register', 'RegisterController', 'register');
+$routes->addRoute('/register', 'RegisterController', 'index');
 $routes->addRoute('/login', 'LoginController', 'index');
 $routes->addRoute('/logout', 'LogoutController', 'logout');
 
 // Routes pour les produits
-$routes->addRoute('/products', 'ProductController', 'index'); // Affichage des produits
-$routes->addRoute('/product/add', 'ProductController', 'create'); // Ajout de produit
-$routes->addRoute('/product/edit', 'ProductController', 'edit'); // Modification de produit
-$routes->addRoute('/product/delete', 'ProductController', 'delete'); // Suppression de produit
+
+$routes->addRoute('/product', 'ProductController', 'index'); // Affichage des produits
+$routes->addRoute('/addProduct', 'ProductController', 'create'); // Ajout de produit
+$routes->addRoute('/editProduct', 'ProductController', 'edit'); // Modification de produit
+$routes->addRoute('/deleteProduct', 'ProductController', 'delete'); // Suppression de produit
 
 // Traite la requête et exécute la méthode correspondante
 $routes->handleRequest();

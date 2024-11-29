@@ -1,40 +1,5 @@
 <?php
 
-// namespace App\Controllers;
-
-// use App\Utils\AbstractController;
-// use App\Models\User;
-
-// class LoginController extends AbstractController
-// {
-//     public function login()
-//     {
-//         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-//             $username = htmlspecialchars($_POST['username']);
-//             $password = $_POST['password'];
-
-//             $userModel = new User();
-//             $user = $userModel->getUserByUsername($username);
-
-//             if ($user && password_verify($password, $user['password'])) {
-//                 $_SESSION['user_id'] = $user['id'];
-//                 header('Location: /');
-//             } else {
-//                 echo "Nom d'utilisateur ou mot de passe incorrect.";
-//             }
-//         }
-//         $this->render('security/login.view.php');
-//     }
-
-//     public function logout()
-//     {
-//         session_destroy();
-//         header('Location: /login');
-//     }
-// }
-
-
-
 namespace App\Controllers;
 
 use App\Utils\AbstractController;
@@ -44,21 +9,25 @@ class LoginController extends AbstractController
 {
     public function index() // Affichage de la page de connexion
     {
+
+        // var_dump(isset($_SESSION["user"]));
         // Vérifier si l'utilisateur a soumis le formulaire de connexion
         if (isset($_POST['email'], $_POST['password'])) {
             // Valider les champs `email` et `password`
             $this->check('email', $_POST['email']);
             $this->check('password', $_POST['password']);
+            // var_dump($_POST['password']);
 
             // Si aucune erreur de validation n'est présente
             if (empty($this->arrayError)) {
                 // Nettoyer les entrées utilisateur
                 $email = htmlspecialchars($_POST['email']);
                 $password = htmlspecialchars($_POST['password']);
-
+                // var_dump($email);
+                // var_dump($password);
                 // Créer une instance de User et récupérer l'utilisateur via l'email
-                $userModel = new User();
-                $user = $userModel->findByEmail($email);
+                $userModel = new User(null, null, $email, $password, null);
+                $user = $userModel->login($email);
 
                 // Si un utilisateur est trouvé et que le mot de passe est valide
                 if ($user && password_verify($password, $user->getPassword())) {
@@ -89,6 +58,7 @@ class LoginController extends AbstractController
         }
 
         // Charger la vue de connexion
+
         require_once(__DIR__ . "/../Views/security/login.view.php");
     }
 
@@ -99,4 +69,3 @@ class LoginController extends AbstractController
         $this->redirectToRoute('/login'); // Rediriger vers la page de connexion
     }
 }
-

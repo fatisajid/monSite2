@@ -2,21 +2,24 @@
 
 namespace App\Controllers;
 
-use App\Models\Category;
+use App\Models\Categorie;
+
+use App\Utils\AbstractController;
 use Config\Database;
 
-class CategoryController
+
+
+
+
+class CategoryController extends AbstractController
 {
-    private $categoryModel;
-
-    public function __construct()
-    {
-        $db = Database::getConnection();
-        $this->categoryModel = new Category($db);
-    }
-
     public function index()
     {
-        return $this->categoryModel->getAllCategories();
+
+        $categorie = new Categorie(null, null, null, null, null, null, null, null);
+        $categories = $categorie->getAllCategories();
+
+        // Inclusion manuelle de la vue avec les produits
+        require_once(__DIR__ . '/../Views/products/home.view.php');
     }
 }
