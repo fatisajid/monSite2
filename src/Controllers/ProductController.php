@@ -21,7 +21,7 @@ class ProductController extends AbstractController
     }
 
 
-    public function show()
+    public function showAllProduct()
     {
 
         // Récupération d'un produit spécifique par ID
@@ -30,7 +30,7 @@ class ProductController extends AbstractController
 
 
         // Inclusion manuelle de la vue avec les produits
-        include __DIR__ . '/../views/products/product.view.php'; // Inclure la vue
+        include __DIR__ . '/../views/products/allProducts.view.php'; // Inclure la vue
     }
 
     public function create()

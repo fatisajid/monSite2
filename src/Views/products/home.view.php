@@ -5,47 +5,41 @@ use App\Models\Product;
 require_once(__DIR__ . '/../partials/header.php');
 
 ?>
+
 <header class="hero">
 
     <h1>Bienvenue dans notre boutique de sacs</h1>
     <p>Trouvez le sac parfait pour chaque occasion</p>
     <a href="#categories" class="btn-cta">Voir nos catégories</a>
 </header>
+<section class="container">
+    <div class="card" style="width: 18rem;">
+        <img src="/public/img/sac a main.jpg" class="card-img-top" alt="photo de sac à main">
+        <div class="card-body">
+            <h5 class="card-title">Sac à main</h5>
+            <p class="card-text">les meilleur sac à main</p>
+            <a href="#" class="btn btn-primary">Voir plus</a>
+        </div>
+    </div>
+    <div class="card" style="width: 18rem;">
+        <img src="/public/img/sac a dos.jpg" class="card-img-top" alt="photo de sac à dos">
+        <div class="card-body">
+            <h5 class="card-title">Sac à dos</h5>
+            <p class="card-text">les meilleur sac à dos</p>
+            <a href="#" class="btn btn-primary">Voir plus</a>
+        </div>
+    </div>
+    <div class="card" style="width: 18rem;">
+        <img src="/public/img/pouchette.jpg" class="card-img-top" alt="phodo des pouchette">
+        <div class="card-body">
+            <h5 class="card-title">Pochette</h5>
+            <p class="card-text">les meilleur pochette</p>
+            <a href="#" class="btn btn-primary">Voir plus</a>
+        </div>
+    </div>
+</section>
 
-<main id="categories">
 
-
-    <?php
-    if (isset($products)) {
-        foreach ($products as $product) {
-            // var_dump($product);
-
-    ?>
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                    <!-- <section class="category"> -->
-                    <h5 class="card-title"><?= $product->getName() ?></h5>
-                    <img src="public/img/<?= $product->getImage() ?>" alt="<?= $product->getName() ?>">
-                    <p class="card-text"><?= $product->getDescription() ?></p>
-                    <p class="card-text"><?= $product->getPrice() ?>€</p>
-                    <a href="/product=<?= $product->getId() ?>" class="btn btn-success">Voir plus</a>
-                    <a href="/editProduct?id=<?= $product->getId() ?>" class="btn btn-warning">Modifier</a>
-                    <form action="/deleteProduct" method="POST">
-                        <input type="hidden" name="id" id="id" value="<?= $product->getId() ?>">
-                        <button type="submit" class="btn btn-danger m-1">Suprimer</button>
-                    </form>
-                </div>
-            </div>
-    <?php
-        }
-    }
-    ?>
-
-    <script src="scripts.js"></script>
-    </body>
-
-    </html>
-
-    <?php
-    include_once(__DIR__ . '/../partials/footer.php');
-    ?>
+<?php
+include_once(__DIR__ . '/../partials/footer.php');
+?>

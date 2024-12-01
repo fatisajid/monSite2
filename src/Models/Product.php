@@ -43,7 +43,6 @@ class Product
                 $products[] = $product;
             }
             return $products;
-        
         }
     }
 
@@ -95,6 +94,24 @@ class Product
         }
     }
 
+    public function getProductByCategory()
+    {
+        $pdo = DataBase::getConnection();
+        $sql = 'SELECT * FROM `products` WHERE `category_id` = ?';
+        $statement = $pdo->prepare($sql);
+        $statement->execute([$this->category_id]);
+        $resultFetch = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $products = [];
+        if ($resultFetch) {
+            foreach ($resultFetch as $row) {
+                $product = new Product($row['id'], $row['category_id'], $row['name'], $row['description'], $row['price'], null, null, $row['image']);
+                $products[] = $product;
+            }
+            return $products;
+        }
+    }
+       
+    
 
     public function updateProduct()
     {
