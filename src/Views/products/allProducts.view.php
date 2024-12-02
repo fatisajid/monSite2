@@ -14,11 +14,12 @@ require_once(__DIR__ . '/../partials/header.php');
 
 <!-- <main id="categories"> -->
 
-
+<div class="cardProduct">
     <?php
-    if (isset($products)) {
-        foreach ($products as $product) {
-            // var_dump($product);
+    if (isset($productModel)) {
+        //  var_dump($product);
+        foreach ($productModel as $product) {
+
 
     ?>
             <div class="card" style="width: 18rem;">
@@ -36,16 +37,47 @@ require_once(__DIR__ . '/../partials/header.php');
                     </form>
                 </div>
             </div>
+
+        <?php
+
+        }
+        ?>
+</div>
+
+<div>
     <?php
+    } else {
+        // var_dump($products);
+        foreach ($products as $product) {
+
+
+    ?>
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <!-- <section class="category"> -->
+                <h5 class="card-title"><?= $product->getName() ?></h5>
+                <img src="public/img/<?= $product->getImage() ?>" alt="<?= $product->getName() ?>">
+                <p class="card-text"><?= $product->getDescription() ?></p>
+                <p class="card-text"><?= $product->getPrice() ?>€</p>
+                <a href="/product=<?= $product->getId() ?>" class="btn btn-success">Voir plus</a>
+                <a href="/editProduct?id=<?= $product->getId() ?>" class="btn btn-warning">Modifier</a>
+                <form action="/deleteProduct" method="POST">
+                    <input type="hidden" name="id" id="id" value="<?= $product->getId() ?>">
+                    <button type="submit" class="btn btn-danger m-1">Suprimer</button>
+                </form>
+            </div>
+        </div>
+<?php
         }
     }
-    ?>
+?>
+</div>
 
-    <script src="scripts.js"></script>
-    </body>
+<script src="scripts.js"></script>
+</body>
 
-    </html>
+</html>
 
-    <?php
-    include_once(__DIR__ . '/../partials/footer.php');
-    ?>
+<?php
+include_once(__DIR__ . '/../partials/footer.php');
+?>

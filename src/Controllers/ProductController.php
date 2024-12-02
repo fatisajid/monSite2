@@ -23,23 +23,26 @@ class ProductController extends AbstractController
 
     public function showAllProduct()
     {
-
-        // Récupération d'un produit spécifique par ID
-        $productModel = new Product(null, null, null, null, null, null, null, null);
-        $product = $productModel->getAllProducts();
-
-
+        if (isset($_GET['category'])) {
+            $idCategory = $_GET['category'];
+            $product = new Product(null, $idCategory, null, null, null, null, null, null);
+            $productModel = $product->getProductByCategory();
+        } else {
+            // Récupération d'un produit spécifique par ID
+            $myProduct = new Product(null, null, null, null, null, null, null, null);
+            $products = $myProduct->getAllProducts();
+            // var_dump($products);
+        }
         // Inclusion manuelle de la vue avec les produits
         include __DIR__ . '/../views/products/allProducts.view.php'; // Inclure la vue
+
     }
 
     public function create()
     {
-
-
         // Vérification si l'utilisateur est connecté et autorisé à créer un produit (exemple : admin)
         if (isset($_SESSION['user']) && $_SESSION['user']['role'] == 'admin') {
-            if (isset($_POST['name'])) {
+            if (isset($_POST['name'], $_POST['category'])) {
                 $this->check('name', $_POST['name']);
                 // $this->check('created_at', $_POST['created_at']);
                 $this->check('description', $_POST['description']);
@@ -53,13 +56,14 @@ class ProductController extends AbstractController
                     $name = htmlspecialchars($_POST['name']);
                     $created_at = date('Y-m-d H:i:s');
                     $description = htmlspecialchars($_POST['description']);
+                    $category = htmlspecialchars($_POST['category']);
                     $price = htmlspecialchars($_POST['price']);
                     // $id_user = $_SESSION['user']['idUser'];
                     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
                         $img = htmlspecialchars(basename($_FILES["fileToUpload"]["name"]));
                         $img_path =  $img;
                     }
-                    $product = new Product(null, null, $name, $description, $price, $created_at, null, $img_path);
+                    $product = new Product(null, $category, $name, $description, $price, $created_at, null, $img_path);
 
                     $product->create();
                     // $this->redirectToRoute('/');
@@ -88,14 +92,14 @@ class ProductController extends AbstractController
             }
 
             if (isset($_POST['name'], $_POST['description'], $_POST['price'])) {
-                var_dump($products);
+                // var_dump($products);
 
                 $this->check('name', $_POST['name']);
                 $this->check('description', $_POST['description']);
                 $this->check('price', $_POST['price']);
                 $target_dir = "public/img/";
                 $target_file = $target_dir . basename($_FILES["image"]["name"]);
-                var_dump($_FILES['image']);
+                // var_dump($_FILES['image']);
 
 
 
@@ -113,11 +117,9 @@ class ProductController extends AbstractController
                             $img_path =  $img;
                         }
                     }
-
-
-
-                    $product = new Product($idProduct, null, $name, $description, $price, null, $updatedAt, $img_path);
-
+                    unlink("public/img/" . $img_path);
+                    $product = new Product($idProduct, null, $name, $description, $price, null, $updatedAt, $image);
+                    var_dump($image);
                     $product->updateProduct();
 
                     $this->redirectToRoute('/');

@@ -51,7 +51,7 @@ footer {
     color: #fff;
     text-align: center;
     padding: 10px 0;
-    position: fixed;
+    /* position: fixed; */
     bottom: 0;
     width: 100%;
     margin-top: 30px !important;
@@ -168,10 +168,15 @@ main {
 
 .container{
     display: flex;
-    justify-content: space-between;
-  
+    justify-content: space-between;  
 }
 
+
+
+.cardProduct{
+    display: flex;
+    justify-content: space-around;
+}
 
 
 

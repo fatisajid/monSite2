@@ -10,7 +10,7 @@ class Product
 {
 
     protected ?int $id;
-    protected ?int $category_id;
+    protected ?string $category;
     protected ?string $name;
     protected ?string $description;
     protected ?float $price;
@@ -18,10 +18,10 @@ class Product
     protected ?string $updated_at;
     protected ?string $image;
 
-    public function __construct(?int $id, ?int $category_id, ?string $name,  ?string $description,  ?float $price, ?string $created_at, string|null $updated_at, ?string $image)
+    public function __construct(?int $id, ?string $category, ?string $name,  ?string $description,  ?float $price, ?string $created_at, string|null $updated_at, ?string $image)
     {
         $this->id = $id;
-        $this->category_id = $category_id;
+        $this->category = $category;
         $this->name = $name;
         $this->description = $description;
         $this->price = $price;
@@ -71,13 +71,18 @@ class Product
         return $this->image;
     }
 
+    public function getCategory(): ?string
+    {
+        return $this->category;
+    }
+
 
     public function create()
     {
         $pdo = DataBase::getConnection();
-        $sql = "INSERT INTO `products` (id, category_id, name, description, price, created_at, updated_at, image) VALUES (?,?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO `products` (id, category, name, description, price, created_at, updated_at, image) VALUES (?,?,?,?,?,?,?,?)";
         $statement = $pdo->prepare($sql);
-        return $statement->execute([$this->id, $this->category_id, $this->name, $this->description, $this->price, $this->created_at, $this->updated_at, $this->image]);
+        return $statement->execute([$this->id, $this->category, $this->name, $this->description, $this->price, $this->created_at, $this->updated_at, $this->image]);
     }
 
     public function getProductById()
@@ -88,7 +93,7 @@ class Product
         $statement->execute([$this->id]);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
         if ($row) {
-            return new Product($row['id'], $row['category_id'], $row['name'], $row['description'], $row['price'], $row['created_at'], $row['updated_at'], $row['image']);
+            return new Product($row['id'], $row['category'], $row['name'], $row['description'], $row['price'], $row['created_at'], $row['updated_at'], $row['image']);
         } else {
             return null;
         }
@@ -97,21 +102,21 @@ class Product
     public function getProductByCategory()
     {
         $pdo = DataBase::getConnection();
-        $sql = 'SELECT * FROM `products` WHERE `category_id` = ?';
+        $sql = 'SELECT * FROM `products` WHERE `category` = ?';
         $statement = $pdo->prepare($sql);
-        $statement->execute([$this->category_id]);
+        $statement->execute([$this->category]);
         $resultFetch = $statement->fetchAll(PDO::FETCH_ASSOC);
         $products = [];
         if ($resultFetch) {
             foreach ($resultFetch as $row) {
-                $product = new Product($row['id'], $row['category_id'], $row['name'], $row['description'], $row['price'], null, null, $row['image']);
+                $product = new Product($row['id'], $row['category'], $row['name'], $row['description'], $row['price'], null, null, $row['image']);
                 $products[] = $product;
             }
             return $products;
         }
     }
-       
-    
+
+
 
     public function updateProduct()
     {

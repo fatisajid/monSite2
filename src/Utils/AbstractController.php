@@ -29,6 +29,7 @@ abstract class AbstractController
         $regexPassword = '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/';
         $regexRole = '/^[12]$/';
         $regexDateTime = '/^[2][0][2-3][0-9][-][0-1][0-9][-][0-3][0-9][T][0-2][0-9][:][0-6][0-9]$/';
+        $regexCategory = '/^[a-zA-Zà-üÀ-Ü -_]{2,255}$/';
 
 
         switch ($nameInput) {
@@ -56,6 +57,11 @@ abstract class AbstractController
             case 'created_at':
                 if (!preg_match($regexDateTime, $value)) {
                     $this->arrayError['created_at'] = 'Merci de renseigner une date et heure correcte!';
+                }
+                break;
+            case 'category':
+                if (!preg_match($regexCategory, $value)) {
+                    $this->arrayError['category'] = "Merci de renseigner un category correct!";
                 }
                 break;
         }

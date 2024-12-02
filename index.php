@@ -35,6 +35,8 @@ $routes->addRoute('/product', 'ProductController', 'index'); // Affichage des pr
 $routes->addRoute('/addProduct', 'ProductController', 'create'); // Ajout de produit
 $routes->addRoute('/editProduct', 'ProductController', 'edit'); // Modification de produit
 $routes->addRoute('/deleteProduct', 'ProductController', 'delete'); // Suppression de produit
+$routes->addRoute('/allProducts', 'ProductController', 'showAllProduct');
+
 
 // Traite la requête et exécute la méthode correspondante
 $routes->handleRequest();

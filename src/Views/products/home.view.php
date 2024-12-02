@@ -18,7 +18,7 @@ require_once(__DIR__ . '/../partials/header.php');
         <div class="card-body">
             <h5 class="card-title">Sac à main</h5>
             <p class="card-text">les meilleur sac à main</p>
-            <a href="#" class="btn btn-primary">Voir plus</a>
+            <a href="/allProducts?category=sacamain" class="btn btn-primary">Voir plus</a>
         </div>
     </div>
     <div class="card" style="width: 18rem;">
@@ -26,7 +26,7 @@ require_once(__DIR__ . '/../partials/header.php');
         <div class="card-body">
             <h5 class="card-title">Sac à dos</h5>
             <p class="card-text">les meilleur sac à dos</p>
-            <a href="#" class="btn btn-primary">Voir plus</a>
+            <a href="/allProducts?category=sacados" class="btn btn-primary">Voir plus</a>
         </div>
     </div>
     <div class="card" style="width: 18rem;">
@@ -34,7 +34,7 @@ require_once(__DIR__ . '/../partials/header.php');
         <div class="card-body">
             <h5 class="card-title">Pochette</h5>
             <p class="card-text">les meilleur pochette</p>
-            <a href="#" class="btn btn-primary">Voir plus</a>
+            <a href="/allProducts?category=pochettes" class="btn btn-primary">Voir plus</a>
         </div>
     </div>
 </section>

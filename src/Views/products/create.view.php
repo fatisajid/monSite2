@@ -31,6 +31,15 @@ require_once(__DIR__ . '/../partials/header.php');
             } ?>
         </div>
         <div class="mb-3">
+            <label for="category" class="form-label">Categories</label>
+            <textarea class="form-control" name="category"></textarea>
+            <?php if (isset($arrayError['category'])) {
+            ?>
+                <p class='text-danger'><?= $arrayError['category'] ?></p>
+            <?php
+            } ?>
+        </div>
+        <div class="mb-3">
             <label for="price">Prix</label>
             <input type="number" name='price'>
             <?php if (isset($this->arrayError['price'])) {
