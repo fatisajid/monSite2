@@ -167,4 +167,5 @@ class User
         $this->role = $role;
         return $this;
     }
+
 }

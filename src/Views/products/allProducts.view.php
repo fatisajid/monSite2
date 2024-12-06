@@ -20,8 +20,8 @@ require_once(__DIR__ . '/../partials/header.php');
         //  var_dump($product);
         foreach ($productModel as $product) {
 
-
     ?>
+
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <!-- <section class="category"> -->
@@ -29,12 +29,20 @@ require_once(__DIR__ . '/../partials/header.php');
                     <img src="public/img/<?= $product->getImage() ?>" alt="<?= $product->getName() ?>">
                     <p class="card-text"><?= $product->getDescription() ?></p>
                     <p class="card-text"><?= $product->getPrice() ?>€</p>
-                    <a href="/product=<?= $product->getId() ?>" class="btn btn-success">Voir plus</a>
-                    <a href="/editProduct?id=<?= $product->getId() ?>" class="btn btn-warning">Modifier</a>
-                    <form action="/deleteProduct" method="POST">
-                        <input type="hidden" name="id" id="id" value="<?= $product->getId() ?>">
-                        <button type="submit" class="btn btn-danger m-1">Suprimer</button>
-                    </form>
+                    <a href="/product?id=<?= $product->getId() ?>" class="btn btn-success">Voir plus</a>
+
+                    <?php
+                    if ($_SESSION['user']['role'] == 'admin') {
+                    ?>
+
+                        <a href="/editProduct?id=<?= $product->getId() ?>" class="btn btn-warning">Modifier</a>
+                        <form action="/deleteProduct" method="POST">
+                            <input type="hidden" name="id" id="id" value="<?= $product->getId() ?>">
+                            <button type="submit" class="btn btn-danger m-1">Suprimer</button>
+                        </form>
+                    <?php
+                    }
+                    ?>
                 </div>
             </div>
 
@@ -59,12 +67,19 @@ require_once(__DIR__ . '/../partials/header.php');
                 <img src="public/img/<?= $product->getImage() ?>" alt="<?= $product->getName() ?>">
                 <p class="card-text"><?= $product->getDescription() ?></p>
                 <p class="card-text"><?= $product->getPrice() ?>€</p>
-                <a href="/product=<?= $product->getId() ?>" class="btn btn-success">Voir plus</a>
-                <a href="/editProduct?id=<?= $product->getId() ?>" class="btn btn-warning">Modifier</a>
-                <form action="/deleteProduct" method="POST">
-                    <input type="hidden" name="id" id="id" value="<?= $product->getId() ?>">
-                    <button type="submit" class="btn btn-danger m-1">Suprimer</button>
-                </form>
+                <a href="/product?id=<?= $product->getId() ?>" class="btn btn-success">Voir plus</a>
+                <?php
+                if ($_SESSION['user']['role'] == 'admin') {
+                ?>
+                    <a href="/editProduct?id=<?= $product->getId() ?>" class="btn btn-warning">Modifier</a>
+                    <form action="/deleteProduct" method="POST">
+                        <input type="hidden" name="id" id="id" value="<?= $product->getId() ?>">
+                        <button type="submit" class="btn btn-danger m-1">Suprimer</button>
+                    </form>
+                <?php
+                }
+
+                ?>
             </div>
         </div>
 <?php

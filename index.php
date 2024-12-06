@@ -31,7 +31,9 @@ $routes->addRoute('/logout', 'LogoutController', 'logout');
 
 // Routes pour les produits
 
-$routes->addRoute('/product', 'ProductController', 'index'); // Affichage des produits
+
+$routes->addRoute('/home', 'ProductController', 'index');
+$routes->addRoute('/product', 'ProductController', 'showOneProduct'); // Affichage un produit
 $routes->addRoute('/addProduct', 'ProductController', 'create'); // Ajout de produit
 $routes->addRoute('/editProduct', 'ProductController', 'edit'); // Modification de produit
 $routes->addRoute('/deleteProduct', 'ProductController', 'delete'); // Suppression de produit

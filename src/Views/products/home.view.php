@@ -34,8 +34,12 @@ require_once(__DIR__ . '/../partials/header.php');
         <div class="card-body">
             <h5 class="card-title">Pochette</h5>
             <p class="card-text">les meilleur pochette</p>
-            <a href="/allProducts?category=pochettes" class="btn btn-primary">Voir plus</a>
+            <a href="/allProducts?category=Pochettes" class="btn btn-primary">Voir plus</a>
         </div>
+    </div>
+
+
+
     </div>
 </section>
 

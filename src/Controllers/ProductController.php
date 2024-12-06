@@ -75,6 +75,19 @@ class ProductController extends AbstractController
         }
     }
 
+    public function showOneProduct()
+    {
+        if (isset($_GET['id'])) {
+
+            $idProduct = htmlspecialchars($_GET['id']);
+            $productModel = new Product($idProduct, null, null, null, null, null, null, null);
+            $products = $productModel->getProductById();
+            require_once(__DIR__ . '/../Views/products/product.view.php');
+        }
+    }
+
+
+
     public function edit()
     {
         if ($_SESSION['user']['role'] == 'admin') {
